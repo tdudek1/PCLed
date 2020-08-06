@@ -6,9 +6,9 @@
         {
             "name": "Win32",
             "includePath": [
-                "C:/SourceCode/PCLED/include",
-                "C:/SourceCode/PCLED/src",
-                "C:/SourceCode/PCLED/.pio/libdeps/nanoatmega328new/FastLED_ID126",
+                "C:/SourceCode/PCLed/include",
+                "C:/SourceCode/PCLed/src",
+                "C:/SourceCode/PCLed/.pio/libdeps/nanoatmega328new/FastLED_ID126",
                 "C:/Users/Thomas Dudek/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
                 "C:/Users/Thomas Dudek/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
                 "C:/Users/Thomas Dudek/.platformio/packages/framework-arduino-avr/cores/arduino",
@@ -22,9 +22,9 @@
             "browse": {
                 "limitSymbolsToIncludedHeaders": true,
                 "path": [
-                    "C:/SourceCode/PCLED/include",
-                    "C:/SourceCode/PCLED/src",
-                    "C:/SourceCode/PCLED/.pio/libdeps/nanoatmega328new/FastLED_ID126",
+                    "C:/SourceCode/PCLed/include",
+                    "C:/SourceCode/PCLed/src",
+                    "C:/SourceCode/PCLed/.pio/libdeps/nanoatmega328new/FastLED_ID126",
                     "C:/Users/Thomas Dudek/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
                     "C:/Users/Thomas Dudek/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
                     "C:/Users/Thomas Dudek/.platformio/packages/framework-arduino-avr/cores/arduino",

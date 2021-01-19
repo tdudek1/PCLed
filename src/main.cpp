@@ -14,6 +14,28 @@ CRGB cooler[FANCOUNT];
 static CRGB *fans[4] = {fanleft, cooler, fanright1, fanright2};
 static uint8_t fanCount = sizeof(fans) / sizeof(fans[0]);
 
+DEFINE_GRADIENT_PALETTE(green_blue_aqua){
+    0, 0, 255, 0,
+    128, 0, 0, 255,
+    255, 0, 255, 255
+};
+
+DEFINE_GRADIENT_PALETTE(orange_red_purple){
+    0, 255, 165, 0,
+    128, 255, 0, 0,
+    255, 128, 0, 128
+};
+
+DEFINE_GRADIENT_PALETTE(blue_purple_red){
+    0, 0, 0, 255,
+    128, 128, 0, 128,
+    255, 255, 0, 0
+};
+
+CRGBPalette16 pallets[] = {blue_purple_red,orange_red_purple,green_blue_aqua};
+
+uint8_t palletSize = sizeof(pallets)/sizeof(pallets[0]);
+
 typedef struct ColorRange
 {
   uint8_t startHue;
@@ -22,7 +44,7 @@ typedef struct ColorRange
 
 ColorRange rg = {0, 96};
 
-ColorRange fg[] = {{96, 192},{192,96},{255,192},{192,255}};
+ColorRange fg[] = {{96, 192}, {192, 96}, {255, 192}, {192, 255}};
 
 static uint8_t startLed = 0;
 static uint8_t currentColor = 0;
@@ -32,7 +54,7 @@ void setup()
 {
   delay(1000); // 3 second delay for recovery
 
-  //Serial.begin(9600);
+  Serial.begin(9600);
 
   // tell FastLED about the LED strip configuration
   FastLED.addLeds<NEOPIXEL, 2>(fanleft, STRIPCOUNT).setCorrection(TypicalLEDStrip);
@@ -50,7 +72,7 @@ void rollingGradient(CRGB *led, uint8_t ledcount, uint8_t starthue, uint8_t endh
 {
   uint8_t range;
   bool isForward;
-  if(starthue < endhue)
+  if (starthue < endhue)
   {
     range = endhue - starthue;
     isForward = true;
@@ -60,7 +82,7 @@ void rollingGradient(CRGB *led, uint8_t ledcount, uint8_t starthue, uint8_t endh
     range = starthue - endhue;
     isForward = false;
   }
-  
+
   uint8_t step = range / ledcount;
   for (uint8_t i = 0; i < ledcount; i++)
   {
@@ -74,6 +96,16 @@ void rollingGradient(CRGB *led, uint8_t ledcount, uint8_t starthue, uint8_t endh
         led[currentLed] = CHSV(0, 0, 255);
       }
     }
+  }
+}
+
+void rollingGradient1(CRGB *led, uint8_t ledcount, CRGBPalette16 pallate)
+{
+
+  for (uint8_t i = 0; i < ledcount; i++)
+  {
+    uint8_t currentLed = ((startLed % ledcount) + i) % ledcount;
+    led[i] = ColorFromPalette(pallate, (currentLed * 255) / (ledcount - 1));
   }
 }
 
@@ -141,7 +173,32 @@ void FloatingRingWithSolid()
   }
 }
 
+void RingsWithSolidStrip1()
+{
+  CRGBPalette16 pl = pallets[currentColor%palletSize];
+  CHSV c1;
+
+  EVERY_N_MILLISECONDS(100)
+  {
+    fill_solid(striptop, STRIPCOUNT, pl[15] );
+    c1 = rgb2hsv_approximate(pl[0]);
+    c1.value = 128;
+    fill_solid(stripbottom,STRIPCOUNT,c1);
+    rollingGradient1(cooler, FANCOUNT, pl);
+    rollingGradient1(fanleft, FANCOUNT, pl);
+    rollingGradient1(fanright1, FANCOUNT, pl);
+    rollingGradient1(fanright2, FANCOUNT, pl);
+    FastLED.show();
+    startLed++;
+  }
+
+  EVERY_N_SECONDS(30)
+  {
+    currentColor++;
+  }
+}
+
 void loop()
 {
-  FloatingRingWithSolid();
+  RingsWithSolidStrip1();
 }
